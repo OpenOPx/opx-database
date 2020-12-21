@@ -6,6 +6,10 @@ CREATE SCHEMA opx AUTHORIZATION opxuser;
 --
 CREATE TABLE "opx"."user" ("last_login" timestamp with time zone NULL, "userid" uuid NOT NULL PRIMARY KEY, "useremail" varchar(100) NOT NULL UNIQUE, "password" varchar(255) NOT NULL, "usertoken" varchar(255) NULL);
 --
+-- Create model City
+--
+CREATE TABLE "opx"."city" ("city_id" varchar(50) NOT NULL PRIMARY KEY, "city_name" varchar(100) NOT NULL);
+--
 -- Create model Comment
 --
 CREATE TABLE "opx"."comment" ("comment_id" uuid NOT NULL PRIMARY KEY, "comment_title" varchar(100) NOT NULL, "comment_description" varchar(500) NOT NULL, "comment_date" timestamp with time zone NOT NULL);
@@ -18,6 +22,10 @@ CREATE TABLE "opx"."context" ("context_id" uuid NOT NULL PRIMARY KEY, "context_d
 --
 CREATE TABLE "opx"."decision" ("decs_id" uuid NOT NULL PRIMARY KEY, "decs_name" varchar(100) NOT NULL, "decs_description" varchar(500) NOT NULL);
 --
+-- Create model DimensionType
+--
+CREATE TABLE "opx"."dimension_type" ("dim_type_id" uuid NOT NULL PRIMARY KEY, "dim_type_name" varchar(100) NOT NULL, "dim_type_description" varchar(300) NULL);
+--
 -- Create model EducationLevel
 --
 CREATE TABLE "opx"."education_level" ("educlevel_id" uuid NOT NULL PRIMARY KEY, "educlevel_name" varchar(100) NOT NULL, "isactive" integer NOT NULL);
@@ -28,7 +36,7 @@ CREATE TABLE "opx"."gender" ("gender_id" uuid NOT NULL PRIMARY KEY, "gender_name
 --
 -- Create model Neighborhood
 --
-CREATE TABLE "opx"."neighborhood" ("neighb_id" integer NOT NULL PRIMARY KEY, "neighb_name" varchar(100) NOT NULL, "city_code" integer NOT NULL);
+CREATE TABLE "opx"."neighborhood" ("neighb_id" integer NOT NULL PRIMARY KEY, "neighb_name" varchar(100) NOT NULL, "city_id" varchar(50) NOT NULL);
 --
 -- Create model Params
 --
@@ -48,7 +56,7 @@ CREATE TABLE "opx"."permissionn" ("perm_id" uuid NOT NULL PRIMARY KEY, "perm_cod
 --
 -- Create model Person
 --
-CREATE TABLE "opx"."person" ("pers_id" uuid NOT NULL PRIMARY KEY, "pers_name" varchar(255) NOT NULL, "pers_lastname" varchar(355) NOT NULL, "pers_birthdate" date NOT NULL, "pers_telephone" varchar(20) NOT NULL, "pers_latitude" varchar(30) NULL, "pers_longitude" varchar(30) NULL, "hour_location" varchar(100) NULL, "pers_score" integer NULL, "pers_creation_date" timestamp with time zone NOT NULL, "isactive" integer NOT NULL, "isemployee" integer NOT NULL, "education_level_id" uuid NOT NULL, "gender_id" uuid NOT NULL, "neighborhood_id" integer NOT NULL);
+CREATE TABLE "opx"."person" ("pers_id" uuid NOT NULL PRIMARY KEY, "pers_name" varchar(255) NOT NULL, "pers_lastname" varchar(355) NOT NULL, "pers_birthdate" date NOT NULL, "pers_telephone" varchar(20) NOT NULL, "pers_latitude" varchar(30) NULL, "pers_longitude" varchar(30) NULL, "hour_location" varchar(100) NULL, "pers_score" integer NULL, "pers_creation_date" timestamp with time zone NOT NULL, "fcm_token" varchar(255) NULL, "isactive" integer NOT NULL, "isemployee" integer NOT NULL, "education_level_id" uuid NOT NULL, "gender_id" uuid NOT NULL, "neighborhood_id" integer NOT NULL);
 --
 -- Create model Project
 --
@@ -76,11 +84,11 @@ CREATE TABLE "opx"."task_type" ("task_type_id" uuid NOT NULL PRIMARY KEY, "task_
 --
 -- Create model Team
 --
-CREATE TABLE "opx"."team" ("team_id" uuid NOT NULL PRIMARY KEY, "team_name" varchar(100) NOT NULL, "team_leader_id" uuid NOT NULL);
+CREATE TABLE "opx"."team" ("team_id" uuid NOT NULL PRIMARY KEY, "team_name" varchar(100) NOT NULL, "team_effectiveness" double precision NOT NULL, "team_leader_id" uuid NOT NULL);
 --
 -- Create model TerritorialDimension
 --
-CREATE TABLE "opx"."territorial_dimension" ("dimension_id" uuid NOT NULL PRIMARY KEY, "dimension_name" varchar(100) NOT NULL, "dimension_geojson" jsonb NOT NULL, "is_preloaded" integer NOT NULL, "isactive" integer NOT NULL, "preloaded" integer NOT NULL);
+CREATE TABLE "opx"."territorial_dimension" ("dimension_id" uuid NOT NULL PRIMARY KEY, "dimension_name" varchar(100) NOT NULL, "dimension_geojson" jsonb NOT NULL, "isactive" integer NOT NULL, "preloaded" integer NOT NULL, "dimension_type_id" uuid NOT NULL);
 --
 -- Create model TeamPerson
 --
@@ -88,7 +96,7 @@ CREATE TABLE "opx"."team_person" ("id" serial NOT NULL PRIMARY KEY, "participati
 --
 -- Create model TaskRestriction
 --
-CREATE TABLE "opx"."task_restriction" ("restriction_id" uuid NOT NULL PRIMARY KEY, "start_time" time NULL, "end_time" time NULL, "task_date" date NULL, "task_start_date" date NULL, "task_end_date" date NULL, "task_id" uuid NOT NULL);
+CREATE TABLE "opx"."task_restriction" ("restriction_id" uuid NOT NULL PRIMARY KEY, "start_time" time NULL, "end_time" time NULL, "task_unique_date" date NULL, "task_start_date" date NULL, "task_end_date" date NULL, "task_id" uuid NOT NULL);
 --
 -- Add field task_priority to task
 --
@@ -140,8 +148,12 @@ ALTER TABLE "opx"."person" ADD COLUMN "user_id" uuid NOT NULL UNIQUE;
 --
 -- Create model DataContext
 --
-CREATE TABLE "opx"."data_context" ("data_id" uuid NOT NULL PRIMARY KEY, "hdxtag" varchar(100) NOT NULL, "data_value" varchar(100) NOT NULL, "data_type" varchar(100) NOT NULL, "data_description" varchar(500) NOT NULL, "data_geojson" varchar(3000) NOT NULL, "data_date" date NULL, "data_time" time NULL, "context_id" uuid NOT NULL);
+CREATE TABLE "opx"."data_context" ("data_id" uuid NOT NULL PRIMARY KEY, "hdxtag" varchar(100) NOT NULL, "data_value" varchar(100) NOT NULL, "data_type" varchar(100) NOT NULL, "data_description" varchar(500) NOT NULL, "data_geojson" jsonb NOT NULL, "data_date" date NULL, "data_time" time NULL, "context_id" uuid NOT NULL);
 CREATE INDEX "user_useremail_acadcdba_like" ON "opx"."user" ("useremail" varchar_pattern_ops);
+CREATE INDEX "city_city_id_56f430dd_like" ON "opx"."city" ("city_id" varchar_pattern_ops);
+ALTER TABLE "opx"."neighborhood" ADD CONSTRAINT "neighborhood_city_id_c731b982_fk_city_city_id" FOREIGN KEY ("city_id") REFERENCES "opx"."city" ("city_id") DEFERRABLE INITIALLY DEFERRED;
+CREATE INDEX "neighborhood_city_id_c731b982" ON "opx"."neighborhood" ("city_id");
+CREATE INDEX "neighborhood_city_id_c731b982_like" ON "opx"."neighborhood" ("city_id" varchar_pattern_ops);
 ALTER TABLE "opx"."person" ADD CONSTRAINT "person_education_level_id_cc1d15f2_fk_education" FOREIGN KEY ("education_level_id") REFERENCES "opx"."education_level" ("educlevel_id") DEFERRABLE INITIALLY DEFERRED;
 ALTER TABLE "opx"."person" ADD CONSTRAINT "person_gender_id_59f5af71_fk_gender_gender_id" FOREIGN KEY ("gender_id") REFERENCES "opx"."gender" ("gender_id") DEFERRABLE INITIALLY DEFERRED;
 ALTER TABLE "opx"."person" ADD CONSTRAINT "person_neighborhood_id_427121f5_fk_neighborhood_neighb_id" FOREIGN KEY ("neighborhood_id") REFERENCES "opx"."neighborhood" ("neighb_id") DEFERRABLE INITIALLY DEFERRED;
@@ -152,6 +164,8 @@ ALTER TABLE "opx"."project" ADD CONSTRAINT "project_proj_owner_id_639c5da3_fk_pe
 CREATE INDEX "project_proj_owner_id_639c5da3" ON "opx"."project" ("proj_owner_id");
 ALTER TABLE "opx"."team" ADD CONSTRAINT "team_team_leader_id_056b6721_fk_person_pers_id" FOREIGN KEY ("team_leader_id") REFERENCES "opx"."person" ("pers_id") DEFERRABLE INITIALLY DEFERRED;
 CREATE INDEX "team_team_leader_id_056b6721" ON "opx"."team" ("team_leader_id");
+ALTER TABLE "opx"."territorial_dimension" ADD CONSTRAINT "territorial_dimensio_dimension_type_id_40efe9c8_fk_dimension" FOREIGN KEY ("dimension_type_id") REFERENCES "opx"."dimension_type" ("dim_type_id") DEFERRABLE INITIALLY DEFERRED;
+CREATE INDEX "territorial_dimension_dimension_type_id_40efe9c8" ON "opx"."territorial_dimension" ("dimension_type_id");
 ALTER TABLE "opx"."team_person" ADD CONSTRAINT "team_person_person_id_ba897a4a_fk_person_pers_id" FOREIGN KEY ("person_id") REFERENCES "opx"."person" ("pers_id") DEFERRABLE INITIALLY DEFERRED;
 ALTER TABLE "opx"."team_person" ADD CONSTRAINT "team_person_team_id_6f3ebd00_fk_team_team_id" FOREIGN KEY ("team_id") REFERENCES "opx"."team" ("team_id") DEFERRABLE INITIALLY DEFERRED;
 CREATE INDEX "team_person_person_id_ba897a4a" ON "opx"."team_person" ("person_id");
