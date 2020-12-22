@@ -52,7 +52,7 @@ CREATE TABLE "opx"."peace_schedule" ("peace_shc_id" uuid NOT NULL PRIMARY KEY, "
 --
 -- Create model Permissionn
 --
-CREATE TABLE "opx"."permissionn" ("perm_id" uuid NOT NULL PRIMARY KEY, "perm_codename" varchar(100) NOT NULL, "perm_name" varchar(255) NOT NULL, "perm_description" varchar(500) NOT NULL);
+CREATE TABLE "opx"."permissionn" ("perm_id" uuid NOT NULL PRIMARY KEY, "perm_codename" varchar(100) NOT NULL, "perm_name" varchar(255) NOT NULL);
 --
 -- Create model Person
 --
@@ -112,7 +112,7 @@ ALTER TABLE "opx"."task" ADD COLUMN "territorial_dimension_id" uuid NOT NULL;
 --
 -- Create model RolePermissionn
 --
-CREATE TABLE "opx"."role_permissionn" ("role_permissionn_id" uuid NOT NULL PRIMARY KEY, "permissionn_id" uuid NOT NULL, "role_id" uuid NOT NULL);
+CREATE TABLE "opx"."role_permissionn" ("role_permissionn_id" serial NOT NULL PRIMARY KEY, "permissionn_id" uuid NOT NULL, "role_id" uuid NOT NULL);
 --
 -- Create model ProjectTerritorialDimension
 --
