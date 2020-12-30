@@ -36,7 +36,7 @@ CREATE TABLE "opx"."gender" ("gender_id" uuid NOT NULL PRIMARY KEY, "gender_name
 --
 -- Create model Instrument
 --
-CREATE TABLE "opx"."instrument" ("instrument_id" uuid NOT NULL PRIMARY KEY, "external_id" varchar(255) NOT NULL, "instrument_type" integer NOT NULL, "instrument_name" varchar(100) NOT NULL, "instrument_description" varchar(300) NOT NULL, "geojson" jsonb NOT NULL);
+CREATE TABLE "opx"."instrument" ("instrument_id" uuid NOT NULL PRIMARY KEY, "external_id" varchar(255) NOT NULL, "instrument_type" integer NOT NULL, "instrument_name" varchar(100) NOT NULL, "instrument_description" varchar(300) NOT NULL, "geojson" jsonb NULL);
 --
 -- Create model Neighborhood
 --
@@ -60,7 +60,7 @@ CREATE TABLE "opx"."permissionn" ("perm_id" uuid NOT NULL PRIMARY KEY, "perm_cod
 --
 -- Create model Person
 --
-CREATE TABLE "opx"."person" ("pers_id" uuid NOT NULL PRIMARY KEY, "pers_name" varchar(255) NOT NULL, "pers_lastname" varchar(255) NOT NULL, "pers_birthdate" date NOT NULL, "pers_telephone" varchar(20) NOT NULL, "pers_latitude" varchar(30) NULL, "pers_longitude" varchar(30) NULL, "hour_location" varchar(100) NULL, "pers_score" integer NULL, "pers_creation_date" timestamp with time zone NOT NULL, "fcm_token" varchar(255) NULL, "isactive" integer NOT NULL, "isemployee" integer NOT NULL, "education_level_id" uuid NOT NULL, "gender_id" uuid NOT NULL, "neighborhood_id" integer NOT NULL);
+CREATE TABLE "opx"."person" ("pers_id" uuid NOT NULL PRIMARY KEY, "pers_name" varchar(255) NOT NULL, "pers_lastname" varchar(255) NOT NULL, "pers_birthdate" date NOT NULL, "pers_telephone" varchar(20) NOT NULL, "pers_latitude" varchar(30) NULL, "pers_longitude" varchar(30) NULL, "hour_location" varchar(100) NULL, "pers_score" integer NULL, "pers_creation_date" timestamp with time zone NOT NULL, "isactive" integer NOT NULL, "isemployee" integer NOT NULL, "education_level_id" uuid NOT NULL, "gender_id" uuid NOT NULL, "neighborhood_id" integer NOT NULL);
 --
 -- Create model Project
 --
@@ -88,7 +88,7 @@ CREATE TABLE "opx"."task_type" ("task_type_id" serial NOT NULL PRIMARY KEY, "tas
 --
 -- Create model Team
 --
-CREATE TABLE "opx"."team" ("team_id" uuid NOT NULL PRIMARY KEY, "team_name" varchar(100) NOT NULL UNIQUE, "team_effectiveness" double precision NOT NULL, "team_leader_id" uuid NOT NULL);
+CREATE TABLE "opx"."team" ("team_id" uuid NOT NULL PRIMARY KEY, "team_name" varchar(100) NOT NULL UNIQUE, "team_description" varchar(300) NOT NULL UNIQUE, "team_effectiveness" double precision NOT NULL, "team_leader_id" uuid NOT NULL);
 --
 -- Create model TerritorialDimension
 --
@@ -100,7 +100,7 @@ CREATE TABLE "opx"."team_person" ("teampers_id" uuid NOT NULL PRIMARY KEY, "part
 --
 -- Create model Task
 --
-CREATE TABLE "opx"."task" ("task_id" uuid NOT NULL PRIMARY KEY, "task_name" varchar(100) NOT NULL UNIQUE, "task_description" varchar(300) NOT NULL, "task_observation" varchar(1000) NOT NULL, "task_creation_date" timestamp with time zone NOT NULL, "task_quantity" integer NOT NULL, "task_completness" double precision NOT NULL, "isactive" integer NOT NULL, "instrument_id" uuid NOT NULL, "project_id" uuid NOT NULL, "task_priority_id" uuid NOT NULL, "task_restriction_id" uuid NOT NULL UNIQUE, "task_type_id" integer NOT NULL, "territorial_dimension_id" uuid NOT NULL);
+CREATE TABLE "opx"."task" ("task_id" uuid NOT NULL PRIMARY KEY, "task_name" varchar(100) NOT NULL UNIQUE, "task_description" varchar(300) NOT NULL, "task_observation" varchar(1000) NOT NULL, "task_creation_date" timestamp with time zone NOT NULL, "task_quantity" integer NOT NULL, "task_completness" double precision NOT NULL, "isactive" integer NOT NULL, "instrument_id" uuid NOT NULL, "proj_dimension_id" uuid NOT NULL, "project_id" uuid NOT NULL, "task_priority_id" uuid NOT NULL, "task_restriction_id" uuid NOT NULL UNIQUE, "task_type_id" integer NOT NULL, "territorial_dimension_id" uuid NOT NULL);
 --
 -- Create model Survery
 --
@@ -150,6 +150,10 @@ CREATE TABLE "opx"."peace_schedule" ("peace_shc_id" uuid NOT NULL PRIMARY KEY, "
 --
 ALTER TABLE "opx"."peace_initiative" ADD COLUMN "person_id" uuid NOT NULL;
 --
+-- Create model Notification
+--
+CREATE TABLE "opx"."notification" ("notification_id" uuid NOT NULL PRIMARY KEY, "notification_type" integer NOT NULL, "description" jsonb NOT NULL, "project_name" varchar(100) NULL, "task_name" varchar(100) NULL, "notification_date" timestamp with time zone NOT NULL, "person_id" uuid NOT NULL);
+--
 -- Create model DataContext
 --
 CREATE TABLE "opx"."data_context" ("data_id" uuid NOT NULL PRIMARY KEY, "hdxtag" varchar(100) NOT NULL, "data_value" varchar(100) NOT NULL, "data_type" varchar(100) NOT NULL, "data_description" varchar(500) NOT NULL, "data_geojson" jsonb NOT NULL, "data_date" date NULL, "data_time" time NULL, "context_id" uuid NOT NULL);
@@ -183,6 +187,7 @@ CREATE INDEX "project_proj_name_90a039d1_like" ON "opx"."project" ("proj_name" v
 CREATE INDEX "project_proj_owner_id_639c5da3" ON "opx"."project" ("proj_owner_id");
 ALTER TABLE "opx"."team" ADD CONSTRAINT "team_team_leader_id_056b6721_fk_person_pers_id" FOREIGN KEY ("team_leader_id") REFERENCES "opx"."person" ("pers_id") DEFERRABLE INITIALLY DEFERRED;
 CREATE INDEX "team_team_name_4537071e_like" ON "opx"."team" ("team_name" varchar_pattern_ops);
+CREATE INDEX "team_team_description_42550e3a_like" ON "opx"."team" ("team_description" varchar_pattern_ops);
 CREATE INDEX "team_team_leader_id_056b6721" ON "opx"."team" ("team_leader_id");
 ALTER TABLE "opx"."territorial_dimension" ADD CONSTRAINT "territorial_dimensio_dimension_type_id_40efe9c8_fk_dimension" FOREIGN KEY ("dimension_type_id") REFERENCES "opx"."dimension_type" ("dim_type_id") DEFERRABLE INITIALLY DEFERRED;
 CREATE INDEX "territorial_dimension_dimension_name_d87bef85_like" ON "opx"."territorial_dimension" ("dimension_name" varchar_pattern_ops);
@@ -192,6 +197,7 @@ ALTER TABLE "opx"."team_person" ADD CONSTRAINT "team_person_team_id_6f3ebd00_fk_
 CREATE INDEX "team_person_person_id_ba897a4a" ON "opx"."team_person" ("person_id");
 CREATE INDEX "team_person_team_id_6f3ebd00" ON "opx"."team_person" ("team_id");
 ALTER TABLE "opx"."task" ADD CONSTRAINT "task_instrument_id_90e4d26d_fk_instrument_instrument_id" FOREIGN KEY ("instrument_id") REFERENCES "opx"."instrument" ("instrument_id") DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE "opx"."task" ADD CONSTRAINT "task_proj_dimension_id_0dfd46bf_fk_territori" FOREIGN KEY ("proj_dimension_id") REFERENCES "opx"."territorial_dimension" ("dimension_id") DEFERRABLE INITIALLY DEFERRED;
 ALTER TABLE "opx"."task" ADD CONSTRAINT "task_project_id_963d6354_fk_project_proj_id" FOREIGN KEY ("project_id") REFERENCES "opx"."project" ("proj_id") DEFERRABLE INITIALLY DEFERRED;
 ALTER TABLE "opx"."task" ADD CONSTRAINT "task_task_priority_id_bc5a917c_fk_task_priority_priority_id" FOREIGN KEY ("task_priority_id") REFERENCES "opx"."task_priority" ("priority_id") DEFERRABLE INITIALLY DEFERRED;
 ALTER TABLE "opx"."task" ADD CONSTRAINT "task_task_restriction_id_f353333a_fk_task_rest" FOREIGN KEY ("task_restriction_id") REFERENCES "opx"."task_restriction" ("restriction_id") DEFERRABLE INITIALLY DEFERRED;
@@ -199,6 +205,7 @@ ALTER TABLE "opx"."task" ADD CONSTRAINT "task_task_type_id_5c87bd47_fk_task_type
 ALTER TABLE "opx"."task" ADD CONSTRAINT "task_territorial_dimensio_7285eaac_fk_territori" FOREIGN KEY ("territorial_dimension_id") REFERENCES "opx"."territorial_dimension" ("dimension_id") DEFERRABLE INITIALLY DEFERRED;
 CREATE INDEX "task_task_name_e2fe5427_like" ON "opx"."task" ("task_name" varchar_pattern_ops);
 CREATE INDEX "task_instrument_id_90e4d26d" ON "opx"."task" ("instrument_id");
+CREATE INDEX "task_proj_dimension_id_0dfd46bf" ON "opx"."task" ("proj_dimension_id");
 CREATE INDEX "task_project_id_963d6354" ON "opx"."task" ("project_id");
 CREATE INDEX "task_task_priority_id_bc5a917c" ON "opx"."task" ("task_priority_id");
 CREATE INDEX "task_task_type_id_5c87bd47" ON "opx"."task" ("task_type_id");
@@ -242,6 +249,8 @@ ALTER TABLE "opx"."peace_schedule" ADD CONSTRAINT "peace_schedule_peace_initiati
 CREATE INDEX "peace_schedule_peace_initiative_id_fc37891c" ON "opx"."peace_schedule" ("peace_initiative_id");
 CREATE INDEX "peace_initiative_person_id_5f3c6adb" ON "opx"."peace_initiative" ("person_id");
 ALTER TABLE "opx"."peace_initiative" ADD CONSTRAINT "peace_initiative_person_id_5f3c6adb_fk_person_pers_id" FOREIGN KEY ("person_id") REFERENCES "opx"."person" ("pers_id") DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE "opx"."notification" ADD CONSTRAINT "notification_person_id_669c895d_fk_person_pers_id" FOREIGN KEY ("person_id") REFERENCES "opx"."person" ("pers_id") DEFERRABLE INITIALLY DEFERRED;
+CREATE INDEX "notification_person_id_669c895d" ON "opx"."notification" ("person_id");
 ALTER TABLE "opx"."data_context" ADD CONSTRAINT "data_context_context_id_2c985f34_fk_context_context_id" FOREIGN KEY ("context_id") REFERENCES "opx"."context" ("context_id") DEFERRABLE INITIALLY DEFERRED;
 CREATE INDEX "data_context_context_id_2c985f34" ON "opx"."data_context" ("context_id");
 ALTER TABLE "opx"."contextualization" ADD CONSTRAINT "contextualization_conflict_id_898890ae_fk_conflict_conflict_id" FOREIGN KEY ("conflict_id") REFERENCES "opx"."conflict" ("conflict_id") DEFERRABLE INITIALLY DEFERRED;
