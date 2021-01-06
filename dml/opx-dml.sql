@@ -467,3 +467,23 @@ INSERT INTO opx.role_permissionn(permissionn_id, role_id) VALUES('1e01ed5c-898a-
 INSERT INTO opx.user(userid, useremail, password) VALUES('b604bf40-601b-49ba-899e-151096591db4', 'develop.opx@gmail.com', '$pbkdf2-sha256$30000$6V2rFaLUuhcCgHCulRICYA$S6hpAX312DkgvjuTjfcZ2ZWDh7NHe7TgPONkWwGxLWc');
 -- person
 INSERT INTO opx.person(pers_id, pers_name, pers_lastname, pers_birthdate, pers_telephone, pers_creation_date, isactive, isemployee, education_level_id, gender_id, neighborhood_id, role_id, user_id) VALUES('0fe6b316-47ba-4885-a081-fdd83aa2f6ef', 'Super', 'Admin', '1998-02-24', '1234567',current_timestamp, 1, 1, 'fb9b8646-84f1-4d43-9951-7e69662ac10c', '0634cdce-f7c6-405a-8a14-9a9973ef81a9', 102, '8945979e-8ca5-481e-92a2-219dd42ae9fc', 'b604bf40-601b-49ba-899e-151096591db4');
+-- task_type
+INSERT INTO opx.task_type(task_type_name, task_type_description) VALUES('Encuesta', 'Tarea de tipo encuesta que va a usar la plataforma externa de kobotoolbox');
+INSERT INTO opx.task_type(task_type_name, task_type_description) VALUES('Cartografia', 'tarea de tipo cartografia que va a usar la plataforma externa de TM');
+-- params
+-- modifique los valores de las ulr y puertos de acuerdo a las configuraciones de su entorno de producción
+INSERT INTO opx.params(params_id, params_value, params_description) VALUES('umbral-validador', '1000', 'Umbral para alcanzar rol Validador');
+INSERT INTO opx.params(params_id, params_value, params_description) VALUES('umbral-proyectista', '5000', 'Umbral para alcanzar rol Proyectista');
+INSERT INTO opx.params(params_id, params_value, params_description) VALUES('aporte-positivo-encuesta', '50', 'Puntos Aporte Encuesta');
+INSERT INTO opx.params(params_id, params_value, params_description) VALUES('aporte-positivo-cartografia', '100', 'Puntos Aporte Cartografia');
+INSERT INTO opx.params(params_id, params_value, params_description) VALUES('aporte-negativo-encuesta', '-50', 'Aporte negativo encuesta');
+INSERT INTO opx.params(params_id, params_value, params_description) VALUES('aporte-negativo-cartografia', '-100', 'Aporte negativo cartografia');
+INSERT INTO opx.params(params_id, params_value, params_description) VALUES('kobo-token', 'Token 9e65dbdf164fbcee05f739d5e2d269e908760d8d', 'Token para los request a KOBO');
+INSERT INTO opx.params(params_id, params_value, params_description) VALUES('kobo-kpi', 'kf.oim-opc.pre', 'URL API REST KOBO KPI');
+INSERT INTO opx.params(params_id, params_value, params_description) VALUES('kobo-kobocat', 'kc.oim-opc.pre', 'URL API REST KOBO KoboCAT');
+INSERT INTO opx.params(params_id, params_value, params_description) VALUES('kobo-puerto', '80', 'puerto del API REST de KOBO');
+INSERT INTO opx.params(params_id, params_value, params_description) VALUES('tm', 'oim-opc.pre', 'URL API REST Tasking Manager');
+INSERT INTO opx.params(params_id, params_value, params_description) VALUES('tm-puerto', '30802', 'puerto del API REST de Tasking Manager');
+INSERT INTO opx.params(params_id, params_value, params_description) VALUES('tm-token', 'Token T1RNM09UQTJOUS5FVi1xemcuUk5MZUIzVHY4bHQ4cnhOR0dWUXNMSVNaTnpR', 'Token Tasking Manager');
+INSERT INTO opx.params(params_id, params_value, params_description) VALUES('timeout-request', '10', 'Timeout en segundos para solicitudes HTTP');
+INSERT INTO opx.params(params_id, params_value, params_description) VALUES('osm-api-url', 'master.apis.dev.openstreetmap.org', 'URL API REST OSM');
