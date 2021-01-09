@@ -1,5 +1,7 @@
 BEGIN;
--- DROP SCHEMA opx ;
+
+DROP SCHEMA opx CASCADE ;
+
 CREATE SCHEMA opx AUTHORIZATION opxuser;
 --
 -- Create model User
@@ -44,7 +46,7 @@ CREATE TABLE "opx"."neighborhood" ("neighb_id" integer NOT NULL PRIMARY KEY, "ne
 --
 -- Create model OsmElement
 --
-CREATE TABLE "opx"."osm_element" ("osmelement_id" uuid NOT NULL PRIMARY KEY, "osmelement_name" varchar(255) NOT NULL, "osmkey" varchar(255) NOT NULL, "losed_way" integer NOT NULL);
+CREATE TABLE "opx"."osm_element" ("osmelement_id" uuid NOT NULL PRIMARY KEY, "osmelement_name" varchar(255) NOT NULL, "osm_key" varchar(255) NOT NULL, "osm_value" varchar(255) NOT NULL, "closed_way" integer NOT NULL);
 --
 -- Create model Params
 --
@@ -64,7 +66,7 @@ CREATE TABLE "opx"."person" ("pers_id" uuid NOT NULL PRIMARY KEY, "pers_name" va
 --
 -- Create model Project
 --
-CREATE TABLE "opx"."project" ("proj_id" uuid NOT NULL PRIMARY KEY, "proj_name" varchar(100) NOT NULL UNIQUE, "proj_description" varchar(500) NOT NULL, "proj_external_id" varchar(500) NOT NULL, "proj_creation_date" timestamp with time zone NOT NULL, "proj_close_date" timestamp with time zone NULL, "proj_start_date" timestamp with time zone NULL, "proj_completness" double precision NOT NULL, "isactive" integer NOT NULL, "proj_owner_id" uuid NOT NULL);
+CREATE TABLE "opx"."project" ("proj_id" uuid NOT NULL PRIMARY KEY, "proj_name" varchar(100) NOT NULL UNIQUE, "proj_description" varchar(500) NOT NULL, "proj_external_id" varchar(500) NOT NULL, "proj_creation_date" timestamp with time zone NOT NULL, "proj_close_date" date NULL, "proj_start_date" date NULL, "proj_completness" double precision NOT NULL, "isactive" integer NOT NULL, "proj_owner_id" uuid NOT NULL);
 --
 -- Create model ProjectType
 --
@@ -80,7 +82,7 @@ CREATE TABLE "opx"."task_priority" ("priority_id" uuid NOT NULL PRIMARY KEY, "pr
 --
 -- Create model TaskRestriction
 --
-CREATE TABLE "opx"."task_restriction" ("restriction_id" uuid NOT NULL PRIMARY KEY, "start_time" time NULL, "end_time" time NULL, "task_unique_date" date NULL, "task_start_date" date NULL, "task_end_date" date NULL);
+CREATE TABLE "opx"."task_restriction" ("restriction_id" uuid NOT NULL PRIMARY KEY, "start_time" time NULL, "end_time" time NULL, "task_start_date" date NULL, "task_end_date" date NULL);
 --
 -- Create model TaskType
 --
@@ -92,7 +94,7 @@ CREATE TABLE "opx"."team" ("team_id" uuid NOT NULL PRIMARY KEY, "team_name" varc
 --
 -- Create model TerritorialDimension
 --
-CREATE TABLE "opx"."territorial_dimension" ("dimension_id" uuid NOT NULL PRIMARY KEY, "dimension_name" varchar(100) NOT NULL UNIQUE, "dimension_geojson" jsonb NOT NULL, "isactive" integer NOT NULL, "preloaded" integer NOT NULL, "dimension_type_id" uuid NOT NULL);
+CREATE TABLE "opx"."territorial_dimension" ("dimension_id" uuid NOT NULL PRIMARY KEY, "dimension_name" varchar(100) NOT NULL UNIQUE, "dimension_geojson" jsonb NOT NULL, "neighborhood_id" varchar(100) NULL, "isactive" integer NOT NULL, "preloaded" integer NOT NULL, "dimension_type_id" uuid NOT NULL);
 --
 -- Create model TeamPerson
 --
@@ -104,7 +106,7 @@ CREATE TABLE "opx"."task" ("task_id" uuid NOT NULL PRIMARY KEY, "task_name" varc
 --
 -- Create model Survery
 --
-CREATE TABLE "opx"."survery" ("survery_id" uuid NOT NULL PRIMARY KEY, "koboid" varchar(255) NOT NULL, "survery_content" jsonb NOT NULL, "survery_state" integer NOT NULL, "survery_observation" varchar(1000) NOT NULL, "instrument_id" uuid NOT NULL, "person_id" uuid NOT NULL, "task_id" uuid NOT NULL);
+CREATE TABLE "opx"."survery" ("survery_id" uuid NOT NULL PRIMARY KEY, "koboid" varchar(255) NOT NULL, "survery_content" jsonb NOT NULL, "survery_state" integer NOT NULL, "survery_observation" varchar(1000) NULL, "instrument_id" uuid NOT NULL, "person_id" uuid NOT NULL, "task_id" uuid NOT NULL);
 --
 -- Create model RolePermissionn
 --

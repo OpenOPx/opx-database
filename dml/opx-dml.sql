@@ -465,11 +465,17 @@ INSERT INTO opx.role_permissionn(permissionn_id, role_id) VALUES('9ad7bfec-dd66-
 INSERT INTO opx.role_permissionn(permissionn_id, role_id) VALUES('1e01ed5c-898a-47e2-b999-a9b3c541fee6','8945979e-8ca5-481e-92a2-219dd42ae9fc');
 --user
 INSERT INTO opx.user(userid, useremail, password) VALUES('b604bf40-601b-49ba-899e-151096591db4', 'develop.opx@gmail.com', '$pbkdf2-sha256$30000$6V2rFaLUuhcCgHCulRICYA$S6hpAX312DkgvjuTjfcZ2ZWDh7NHe7TgPONkWwGxLWc');
+INSERT INTO opx.user(userid, useremail, password) VALUES('f93756dd-6afc-488a-be9d-67743613baed', 'secretaria.opx@opx.com', '$pbkdf2-sha256$30000$6V2rFaLUuhcCgHCulRICYA$S6hpAX312DkgvjuTjfcZ2ZWDh7NHe7TgPONkWwGxLWc');
 -- person
 INSERT INTO opx.person(pers_id, pers_name, pers_lastname, pers_birthdate, pers_telephone, pers_creation_date, isactive, isemployee, education_level_id, gender_id, neighborhood_id, role_id, user_id) VALUES('0fe6b316-47ba-4885-a081-fdd83aa2f6ef', 'Super', 'Admin', '1998-02-24', '1234567',current_timestamp, 1, 1, 'fb9b8646-84f1-4d43-9951-7e69662ac10c', '0634cdce-f7c6-405a-8a14-9a9973ef81a9', 102, '8945979e-8ca5-481e-92a2-219dd42ae9fc', 'b604bf40-601b-49ba-899e-151096591db4');
+INSERT INTO opx.person(pers_id, pers_name, pers_lastname, pers_birthdate, pers_telephone, pers_creation_date, isactive, isemployee, education_level_id, gender_id, neighborhood_id, role_id, user_id) VALUES('54fbfaff-7272-4887-8d3a-917b46de1a20', 'Secretaria de Paz', 'Cali', '1998-02-24', '1234567',current_timestamp, 1, 1, 'fb9b8646-84f1-4d43-9951-7e69662ac10c', '0634cdce-f7c6-405a-8a14-9a9973ef81a9', 102, '8945979e-8ca5-481e-92a2-219dd42ae9fc', 'f93756dd-6afc-488a-be9d-67743613baed');
+-- team ciudadanos
+INSERT INTO opx.team(team_id, team_name, team_description, team_effectiveness, team_leader_id) VALUES('b4879f48-8ab1-4d79-8f5b-7585b75cfb07', 'Ciudadanos', 'Equipo público', 0, '54fbfaff-7272-4887-8d3a-917b46de1a20');
+
 -- task_type
 INSERT INTO opx.task_type(task_type_name, task_type_description) VALUES('Encuesta', 'Tarea de tipo encuesta que va a usar la plataforma externa de kobotoolbox');
-INSERT INTO opx.task_type(task_type_name, task_type_description) VALUES('Cartografia', 'tarea de tipo cartografia que va a usar la plataforma externa de TM');
+--INSERT INTO opx.task_type(task_type_name, task_type_description) VALUES('Cartografia', 'tarea de tipo cartografia que va a usar la plataforma externa de TM');
+
 -- params
 -- modifique los valores de las ulr y puertos de acuerdo a las configuraciones de su entorno de producción
 INSERT INTO opx.params(params_id, params_value, params_description) VALUES('umbral-validador', '1000', 'Umbral para alcanzar rol Validador');
@@ -478,12 +484,20 @@ INSERT INTO opx.params(params_id, params_value, params_description) VALUES('apor
 INSERT INTO opx.params(params_id, params_value, params_description) VALUES('aporte-positivo-cartografia', '100', 'Puntos Aporte Cartografia');
 INSERT INTO opx.params(params_id, params_value, params_description) VALUES('aporte-negativo-encuesta', '-50', 'Aporte negativo encuesta');
 INSERT INTO opx.params(params_id, params_value, params_description) VALUES('aporte-negativo-cartografia', '-100', 'Aporte negativo cartografia');
-INSERT INTO opx.params(params_id, params_value, params_description) VALUES('kobo-token', 'Token 9e65dbdf164fbcee05f739d5e2d269e908760d8d', 'Token para los request a KOBO');
-INSERT INTO opx.params(params_id, params_value, params_description) VALUES('kobo-kpi', 'kf.oim-opc.pre', 'URL API REST KOBO KPI');
-INSERT INTO opx.params(params_id, params_value, params_description) VALUES('kobo-kobocat', 'kc.oim-opc.pre', 'URL API REST KOBO KoboCAT');
+INSERT INTO opx.params(params_id, params_value, params_description) VALUES('kobo-token', 'Token 09543483533b901becebe835161b6d841031d465', 'Token para los request a KOBO');
+INSERT INTO opx.params(params_id, params_value, params_description) VALUES('kobo-kpi', 'kf.variamos.com', 'URL API REST KOBO KPI');
+INSERT INTO opx.params(params_id, params_value, params_description) VALUES('kobo-kobocat', 'kc.variamos.com', 'URL API REST KOBO KoboCAT');
 INSERT INTO opx.params(params_id, params_value, params_description) VALUES('kobo-puerto', '80', 'puerto del API REST de KOBO');
 INSERT INTO opx.params(params_id, params_value, params_description) VALUES('tm', 'oim-opc.pre', 'URL API REST Tasking Manager');
 INSERT INTO opx.params(params_id, params_value, params_description) VALUES('tm-puerto', '30802', 'puerto del API REST de Tasking Manager');
 INSERT INTO opx.params(params_id, params_value, params_description) VALUES('tm-token', 'Token T1RNM09UQTJOUS5FVi1xemcuUk5MZUIzVHY4bHQ4cnhOR0dWUXNMSVNaTnpR', 'Token Tasking Manager');
 INSERT INTO opx.params(params_id, params_value, params_description) VALUES('timeout-request', '10', 'Timeout en segundos para solicitudes HTTP');
 INSERT INTO opx.params(params_id, params_value, params_description) VALUES('osm-api-url', 'master.apis.dev.openstreetmap.org', 'URL API REST OSM');
+
+-- dimension_type
+INSERT INTO opx.dimension_type(dim_type_id, dim_type_name, dim_type_description) VALUES('35b0b478-9675-45fe-8da5-02ea9ef88f1b', 'Urbana', 'Grandes ciudades industrializadas.');
+INSERT INTO opx.dimension_type(dim_type_id, dim_type_name, dim_type_description) VALUES('3934414c-c15e-4ddc-bdee-9c434237caa7', 'Rural', 'Grandes campos donde predominan las actividades agropecuarias.');
+-- task_priority
+INSERT INTO opx.task_priority(priority_id, priority_name, priority_number) VALUES('3178cdc1-4756-4565-9a41-6f7efed27b12', 'Alta', 3);
+INSERT INTO opx.task_priority(priority_id, priority_name, priority_number) VALUES('43601d71-4e9a-45e5-8f68-d24a31071107', 'Media', 2);
+INSERT INTO opx.task_priority(priority_id, priority_name, priority_number) VALUES('94281abf-11d9-4b9d-8c07-f01e8025a202', 'Baja', 1);
