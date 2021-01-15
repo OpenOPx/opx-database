@@ -1,2 +1,0 @@
--- person
-INSERT INTO opx.person(pers_id, pers_name, pers_lastname, pers_birthdate, pers_telephone, pers_creation_date, isactive, isemployee, education_level_id, gender_id, neighborhood_id, role_id, user_id) VALUES('0fe6b316-47ba-4885-a081-fdd83aa2f6ef', 'Super', 'Admin', '1998-02-24', '1234567',current_timestamp, 1, 1, 'fb9b8646-84f1-4d43-9951-7e69662ac10c', '0634cdce-f7c6-405a-8a14-9a9973ef81a9', 102, '8945979e-8ca5-481e-92a2-219dd42ae9fc', 'b604bf40-601b-49ba-899e-151096591db4');
